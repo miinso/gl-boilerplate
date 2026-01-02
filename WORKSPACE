@@ -26,3 +26,15 @@ http_archive(
     strip_prefix = "glfw-{}".format(GLFW2_VERSION),
     urls = ["https://github.com/glfw/glfw/archive/{}.tar.gz".format(GLFW2_VERSION)],
 )
+
+##
+# raylib (latest)
+##
+git_repository(
+    name = "raylib-latest",
+    # branch = "master",
+    build_file = "//third_party:raylib-latest.BUILD",
+    commit = "cf0d6fc664f1d0775c6b21ed79feaa1e38b2ddb4", # Dec 16, 2025
+    # depth = 1,
+    remote = "https://github.com/raysan5/raylib.git",
+)

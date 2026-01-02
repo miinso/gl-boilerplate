@@ -45,22 +45,11 @@ cc_library(
         "//conditions:default": [],
     }),
     includes = ["include"],
-    linkopts = select({
-        "@platforms//os:linux": [
-            "-lEGL",
-            "-lGLESv2",
-        ],
-        "@platforms//os:macos": [
-            "-L.",
-            "-Wl,-rpath,@loader_path",  # current dir
-            "-Wl,-rpath,@loader_path/..",  # parent dir
-        ],
-        "//conditions:default": [],
-    }),
     visibility = ["//visibility:public"],
     deps = [
         ":libEGL",
         ":libGLESv2",
     ],
 )
+
 

@@ -24,6 +24,9 @@ build:macos --cxxopt=-std=c++14 # see https://clang.llvm.org/cxx_status.html
 build:macos --cxxopt=-Wall
 build:macos --define compiler=macos
 
+# ANGLE support - set library path for dynamic libraries
+run:angle --run_under="env DYLD_LIBRARY_PATH=third_party/angle"
+
 # build --enable_platform_specific_config 
 # build:windows --enable_runfiles # https://github.com/bazelbuild/bazel/issues/8843
 

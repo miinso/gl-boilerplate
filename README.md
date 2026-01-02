@@ -112,6 +112,34 @@ On Linux:
 ```
 ```
 
+## raylib + ANGLE
+
+Raylib configured to use OpenGL ES through ANGLE (translates to Metal on macOS).
+
+| Feature     | Windows | macOS    | Linux      |
+| ----------- | ------- | -------- | ---------- |
+| GLES 2.0    |         | ✅       |            |
+| GLES 3.0    |         | ✅       |            |
+| GLSL 300 es |         | ✅       |            |
+
+Run with: `bazel run --config=angle //ex5-raylib-angle-egl:<target>`
+
+Examples:
+- `raylib_angle_basic` - Simple bouncing ball demo
+- `raylib_angle_shader_300es` - Custom GLSL 300 es shaders with animated cube
+
+On macOS (2018 Mac mini):
+```
+INFO: GLAD: OpenGL ES 2.0 loaded successfully
+INFO: GL: OpenGL device information:
+INFO:     > Vendor:   Google Inc. (Intel Inc.)
+INFO:     > Renderer: ANGLE (Intel Inc., Intel(R) UHD Graphics 630, OpenGL 4.1 INTEL-23.0.26)
+INFO:     > Version:  OpenGL ES 3.0.0 (ANGLE 2.1.23876 git hash: fffbc739779a)
+INFO:     > GLSL:     OpenGL ES GLSL ES 3.00 (ANGLE 2.1.23876 git hash: fffbc739779a)
+```
+
+**Note**: Even though it says "OpenGL ES 2.0 loaded", ANGLE provides full ES 3.0 support at runtime.
+
 ## GLAD2 + SwANGLE
 
 OpenGL ES on SwiftShader Vulkan

@@ -6,6 +6,8 @@ cc_library(
     hdrs = [
         "include/KHR/khrplatform.h",
         "include/glad/glad.h",
+        "include/GLES3/gl3.h",
+        "include/GLES2/gl2ext.h",
     ],
     includes = ["include"],
     visibility = ["//visibility:public"],
