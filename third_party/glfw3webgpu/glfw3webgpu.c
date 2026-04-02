@@ -5,8 +5,6 @@
  * MIT License - Copyright (c) 2022-2025 Elie Michel and the wgpu-native authors
  */
 
-#include "glfw3webgpu.h"
-
 #ifdef _WIN32
   #include <windows.h>
   #define GLFW_EXPOSE_NATIVE_WIN32
@@ -14,16 +12,12 @@
   #define GLFW_EXPOSE_NATIVE_COCOA
 #elif defined(__linux__)
   #define GLFW_EXPOSE_NATIVE_X11
+  #define GLFW_EXPOSE_NATIVE_WAYLAND
 #endif
 
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 #include <webgpu/webgpu.h>
-
-#ifdef __APPLE__
-  #include <Foundation/Foundation.h>
-  #include <QuartzCore/CAMetalLayer.h>
-#endif
 
 WGPUSurface glfwCreateWindowWGPUSurface(WGPUInstance instance, GLFWwindow* window) {
 #ifdef _WIN32
@@ -59,7 +53,22 @@ WGPUSurface glfwCreateWindowWGPUSurface(WGPUInstance instance, GLFWwindow* windo
         return wgpuInstanceCreateSurface(instance, &desc);
     }
 #elif defined(__linux__)
-    {
+    /* runtime detect: prefer wayland (works with wgpu GL+EGL backend), fall back to x11 */
+    if (glfwGetPlatform() == GLFW_PLATFORM_WAYLAND) {
+        struct wl_display* wl_display = glfwGetWaylandDisplay();
+        struct wl_surface* wl_surface = glfwGetWaylandWindow(window);
+        WGPUSurfaceSourceWaylandSurface fromWayland = {
+            .chain = { .next = NULL, .sType = WGPUSType_SurfaceSourceWaylandSurface },
+            .display = wl_display,
+            .surface = wl_surface,
+        };
+        WGPUSurfaceDescriptor desc = {
+            .nextInChain = &fromWayland.chain,
+            .label = { .data = NULL, .length = 0 },
+        };
+        return wgpuInstanceCreateSurface(instance, &desc);
+    }
+    if (glfwGetPlatform() == GLFW_PLATFORM_X11) {
         Display* x11_display = glfwGetX11Display();
         Window x11_window = glfwGetX11Window(window);
         WGPUSurfaceSourceXlibWindow fromXlib = {
@@ -73,6 +82,7 @@ WGPUSurface glfwCreateWindowWGPUSurface(WGPUInstance instance, GLFWwindow* windo
         };
         return wgpuInstanceCreateSurface(instance, &desc);
     }
+    return NULL;
 #else
     (void)instance;
     (void)window;

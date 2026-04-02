@@ -1,5 +1,7 @@
 load("@rules_cc//cc:defs.bzl", "cc_library", "objc_library")
 
+# ===== wayland protocol headers (pre-generated in //third_party/glfw2/wayland-protocols/) =====
+
 # ===== win32 =====
 
 WIN32_DEFINES = [
@@ -33,16 +35,16 @@ WIN32_LINKOPTS = [
 # ===== linux =====
 
 LINUX_DEFINES = [
-    "_GLFW_X11",  # enabled x11 backend support
-    # "_GLFW_WAYLAND",  # disabled wayland backend support for now
+    "_GLFW_X11",
+    "_GLFW_WAYLAND",
 ]
 
 LINUX_HDRS = [
-    # "src/glx_context.h",
     "src/linux_joystick.h",
     "src/posix_thread.h",
     "src/posix_time.h",
     "src/x11_platform.h",
+    "src/wl_platform.h",
     "src/posix_poll.h",
     "src/xkb_unicode.h",
 ]
@@ -55,12 +57,18 @@ LINUX_SRCS = [
     "src/posix_time.c",
     "src/posix_poll.c",
     "src/x11_init.c",
-    "src/x11_monitor.c", 
+    "src/x11_monitor.c",
     "src/x11_window.c",
+    "src/wl_init.c",
+    "src/wl_monitor.c",
+    "src/wl_window.c",
     "src/xkb_unicode.c",
 ]
 
-LINUX_LINKOPTS = []
+LINUX_LINKOPTS = [
+    "-lwayland-client",
+    "-lwayland-egl",
+]
 
 # ===== darwin =====
 
@@ -139,6 +147,10 @@ cc_library(
     includes = ["src"],
     copts = select({
         "@bazel_tools//src/conditions:windows": ["/DWIN32_LEAN_AND_MEAN"],
+        "//conditions:default": [],
+    }),
+    deps = select({
+        "@bazel_tools//src/conditions:linux_x86_64": ["@//third_party/glfw2/wayland-protocols"],
         "//conditions:default": [],
     }),
     linkopts = select({
