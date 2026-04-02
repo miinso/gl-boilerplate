@@ -1,3 +1,5 @@
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+
 ##
 #  glad2 + glfw demos
 ##
@@ -15,17 +17,17 @@ cpp_file_names = glob(["*.cpp"])
         includes = [
         ],
         linkopts = select({
+            "@platforms//os:linux": [
+                "-lGL",
+                "-lGLU",
+                "-lX11",
+            ],
             "@platforms//os:macos": [
                 "-framework",
                 "OpenGL",
             ],
             "@platforms//os:windows": [
                 "-DEFAULTLIB:opengl32.lib",
-            ],
-            "@platforms//os:linux": [
-                "-lGL",
-                "-lGLU",
-                "-lX11",
             ],
             "//conditions:default": [],
         }),

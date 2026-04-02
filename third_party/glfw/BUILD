@@ -120,16 +120,16 @@ COMMON_SRCS = [
 cc_library(
     name = "glfw_src",
     srcs = COMMON_SRCS + select({
-        "@bazel_tools//src/conditions:windows": WIN32_SRCS,
         "@bazel_tools//src/conditions:linux_x86_64": LINUX_SRCS,
+        "@bazel_tools//src/conditions:windows": WIN32_SRCS,
     }),
     hdrs = COMMON_HDRS + select({
-        "@bazel_tools//src/conditions:windows": WIN32_HDRS,
         "@bazel_tools//src/conditions:linux_x86_64": LINUX_HDRS,
+        "@bazel_tools//src/conditions:windows": WIN32_HDRS,
     }),
     defines = select({
-        "@bazel_tools//src/conditions:windows": WIN32_DEFINES,
         "@bazel_tools//src/conditions:linux_x86_64": LINUX_DEFINES,
+        "@bazel_tools//src/conditions:windows": WIN32_DEFINES,
     }),
 )
 
@@ -148,15 +148,15 @@ cc_library(
         "include/GLFW/glfw3native.h",
     ],
     linkopts = select({
-        "@bazel_tools//src/conditions:windows": WIN32_LINKOPTS,
-        "@bazel_tools//src/conditions:linux_x86_64": LINUX_LINKOPTS,
         "@bazel_tools//src/conditions:darwin": DARWIN_LINKOPTS,
+        "@bazel_tools//src/conditions:linux_x86_64": LINUX_LINKOPTS,
+        "@bazel_tools//src/conditions:windows": WIN32_LINKOPTS,
     }),
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = select({
-        "@bazel_tools//src/conditions:windows": [":glfw_src"],
-        "@bazel_tools//src/conditions:linux_x86_64": [":glfw_src"],
         "@bazel_tools//src/conditions:darwin": [":glfw_src_darwin"],
+        "@bazel_tools//src/conditions:linux_x86_64": [":glfw_src"],
+        "@bazel_tools//src/conditions:windows": [":glfw_src"],
     }),
 )

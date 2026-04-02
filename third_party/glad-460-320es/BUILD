@@ -1,3 +1,5 @@
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
 # APIs: gl=4.6, gles2=3.2
 # Profile: compatibility
 cc_library(

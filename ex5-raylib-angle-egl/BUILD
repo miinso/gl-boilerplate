@@ -3,6 +3,8 @@
 #  Run with: bazel run --config=angle //ex5-raylib-angle-egl:<target>
 ##
 
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+
 cc_binary(
     name = "raylib_angle_basic",
     srcs = ["raylib_angle_basic.c"],

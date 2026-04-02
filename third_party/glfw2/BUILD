@@ -28,7 +28,7 @@ WIN32_SRCS = [
 
 WIN32_LINKOPTS = [
     "-DEFAULTLIB:user32.lib",
-    "-DEFAULTLIB:gdi32.lib", 
+    "-DEFAULTLIB:gdi32.lib",
     "-DEFAULTLIB:shell32.lib",
 ]
 
@@ -86,7 +86,7 @@ DARWIN_HDRS = [
 DARWIN_SRCS = [
     "src/cocoa_init.m",
     "src/cocoa_joystick.m",
-    "src/cocoa_monitor.m", 
+    "src/cocoa_monitor.m",
     "src/cocoa_time.c",
     "src/cocoa_window.m",
     "src/nsgl_context.m",
@@ -117,7 +117,7 @@ COMMON_SRCS = [
     "src/context.c",
     "src/egl_context.c",
     "src/init.c",
-    "src/input.c", 
+    "src/input.c",
     "src/monitor.c",
     "src/platform.c",
     "src/vulkan.c",
@@ -133,29 +133,29 @@ COMMON_SRCS = [
 cc_library(
     name = "glfw_src",
     srcs = COMMON_SRCS + select({
-        "@bazel_tools//src/conditions:windows": WIN32_SRCS,
         "@bazel_tools//src/conditions:linux_x86_64": LINUX_SRCS,
+        "@bazel_tools//src/conditions:windows": WIN32_SRCS,
     }),
     hdrs = COMMON_HDRS + select({
-        "@bazel_tools//src/conditions:windows": WIN32_HDRS,
         "@bazel_tools//src/conditions:linux_x86_64": LINUX_HDRS,
+        "@bazel_tools//src/conditions:windows": WIN32_HDRS,
     }),
-    defines = select({
-        "@bazel_tools//src/conditions:windows": WIN32_DEFINES,
-        "@bazel_tools//src/conditions:linux_x86_64": LINUX_DEFINES,
-    }),
-    includes = ["src"],
     copts = select({
         "@bazel_tools//src/conditions:windows": ["/DWIN32_LEAN_AND_MEAN"],
         "//conditions:default": [],
     }),
-    deps = select({
-        "@bazel_tools//src/conditions:linux_x86_64": ["@//third_party/glfw2/wayland-protocols"],
+    defines = select({
+        "@bazel_tools//src/conditions:linux_x86_64": LINUX_DEFINES,
+        "@bazel_tools//src/conditions:windows": WIN32_DEFINES,
+    }),
+    includes = ["src"],
+    linkopts = select({
+        "@bazel_tools//src/conditions:linux_x86_64": LINUX_LINKOPTS,
+        "@bazel_tools//src/conditions:windows": WIN32_LINKOPTS,
         "//conditions:default": [],
     }),
-    linkopts = select({
-        "@bazel_tools//src/conditions:windows": WIN32_LINKOPTS,
-        "@bazel_tools//src/conditions:linux_x86_64": LINUX_LINKOPTS,
+    deps = select({
+        "@bazel_tools//src/conditions:linux_x86_64": ["@//third_party/glfw2/wayland-protocols"],
         "//conditions:default": [],
     }),
 )
@@ -164,12 +164,12 @@ objc_library(
     name = "glfw_src_darwin",
     srcs = COMMON_SRCS + DARWIN_SRCS,
     hdrs = COMMON_HDRS + DARWIN_HDRS,
-    defines = DARWIN_DEFINES,
-    includes = ["src"],
     copts = [
         "-fno-objc-arc",
         "-DGL_SILENCE_DEPRECATION",
     ],
+    defines = DARWIN_DEFINES,
+    includes = ["src"],
 )
 
 cc_library(
@@ -179,15 +179,15 @@ cc_library(
         "include/GLFW/glfw3native.h",
     ],
     linkopts = select({
-        "@bazel_tools//src/conditions:windows": WIN32_LINKOPTS,
-        "@bazel_tools//src/conditions:linux_x86_64": LINUX_LINKOPTS,
         "@bazel_tools//src/conditions:darwin": DARWIN_LINKOPTS,
+        "@bazel_tools//src/conditions:linux_x86_64": LINUX_LINKOPTS,
+        "@bazel_tools//src/conditions:windows": WIN32_LINKOPTS,
     }),
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = select({
-        "@bazel_tools//src/conditions:windows": [":glfw_src"],
-        "@bazel_tools//src/conditions:linux_x86_64": [":glfw_src"],
         "@bazel_tools//src/conditions:darwin": [":glfw_src_darwin"],
+        "@bazel_tools//src/conditions:linux_x86_64": [":glfw_src"],
+        "@bazel_tools//src/conditions:windows": [":glfw_src"],
     }),
 )

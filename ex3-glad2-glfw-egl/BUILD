@@ -1,3 +1,5 @@
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+
 ##
 #  explicitly uses egl
 ##
@@ -10,17 +12,17 @@ cpp_file_names = glob(["*.cpp"])
         copts = [],
         includes = [],
         linkopts = select({
+            "@platforms//os:linux": [
+                "-lGL",
+                "-lGLU",
+                "-lX11",
+            ],
             "@platforms//os:macos": [
                 "-framework",
                 "OpenGL",
             ],
             "@platforms//os:windows": [
                 "-DEFAULTLIB:opengl32.lib",
-            ],
-            "@platforms//os:linux": [
-                "-lGL",
-                "-lGLU",
-                "-lX11",
             ],
             "//conditions:default": [],
         }),

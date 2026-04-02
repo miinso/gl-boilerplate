@@ -1,3 +1,5 @@
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
 ##
 #  pre-generated wayland protocol headers for GLFW (no wayland-scanner needed)
 #  regenerate: for p in @glfw2//deps/wayland/*.xml; do n=$(basename $p .xml);
