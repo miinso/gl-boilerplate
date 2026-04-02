@@ -166,26 +166,41 @@ cc_library(
     ], allow_empty = True),
     includes = ["src"],
     defines = select({
+        "@platforms//os:windows": [
+            "PLATFORM_DESKTOP",
+            "PLATFORM_DESKTOP_GLFW",
+            "GRAPHICS_API_OPENGL_ES2",
+            "GLFW_INCLUDE_NONE",
+        ],
         "@platforms//os:macos": [
             "PLATFORM_DESKTOP",
             "PLATFORM_DESKTOP_GLFW",
-            "GRAPHICS_API_OPENGL_ES2",  # Use ES2 API (ANGLE supports ES 3.0 functions anyway)
+            "GRAPHICS_API_OPENGL_ES2",
             "GLFW_INCLUDE_NONE",
             "GL_SILENCE_DEPRECATION",
         ],
         "@platforms//os:linux": [
             "PLATFORM_DESKTOP",
             "PLATFORM_DESKTOP_GLFW",
-            "GRAPHICS_API_OPENGL_ES3",
+            "GRAPHICS_API_OPENGL_ES2",
+            "GLFW_INCLUDE_NONE",
             "_GNU_SOURCE",
         ],
         "//conditions:default": [
             "PLATFORM_DESKTOP",
             "PLATFORM_DESKTOP_GLFW",
-            "GRAPHICS_API_OPENGL_ES3",
+            "GRAPHICS_API_OPENGL_ES2",
+            "GLFW_INCLUDE_NONE",
         ],
     }),
     copts = select({
+        "@platforms//os:windows": [
+            "/std:c11",
+            "/D_CRT_SECURE_NO_WARNINGS",
+            "/permissive-",
+            "/Zc:preprocessor",
+            "/W3",
+        ],
         "@platforms//os:macos": [
             "-std=gnu99",
             "-fno-strict-aliasing",
@@ -207,6 +222,17 @@ cc_library(
         ],
     }),
     linkopts = select({
+        "@platforms//os:windows": [
+            "/DEFAULTLIB:user32.lib",
+            "/DEFAULTLIB:gdi32.lib",
+            "/DEFAULTLIB:winmm.lib",
+            "/DEFAULTLIB:imm32.lib",
+            "/DEFAULTLIB:ole32.lib",
+            "/DEFAULTLIB:shell32.lib",
+            "/DEFAULTLIB:advapi32.lib",
+            "/DEFAULTLIB:version.lib",
+            "/DEFAULTLIB:uuid.lib",
+        ],
         "@platforms//os:macos": [
             "-framework", "Cocoa",
             "-framework", "IOKit",
@@ -226,12 +252,20 @@ cc_library(
         "//conditions:default": [],
     }),
     deps = select({
-        "@platforms//os:windows": ["@glfw2//:glfw2"],
-        "@platforms//os:linux": ["@glfw2//:glfw2"],
+        "@platforms//os:windows": [
+            "@glfw2//:glfw2",
+            "@//third_party/angle",
+            "@//third_party/glad2",
+        ],
+        "@platforms//os:linux": [
+            "@glfw2//:glfw2",
+            "@//third_party/angle",
+            "@//third_party/glad2",
+        ],
         "@platforms//os:macos": [
             "@glfw2//:glfw2",
-            "@com_gl_boilerplate//third_party/angle",
-            "@com_gl_boilerplate//third_party/glad2",
+            "@//third_party/angle",
+            "@//third_party/glad2",
         ],
         "//conditions:default": [],
     }),

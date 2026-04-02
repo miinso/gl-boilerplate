@@ -8,11 +8,14 @@ load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 cc_binary(
     name = "raylib_angle_basic",
     srcs = ["raylib_angle_basic.c"],
-    copts = [
-        "-std=gnu99",
-        "-fno-strict-aliasing",
-        "-Wno-missing-braces",
-    ],
+    copts = select({
+        "@platforms//os:windows": ["/std:c11"],
+        "//conditions:default": [
+            "-std=gnu99",
+            "-fno-strict-aliasing",
+            "-Wno-missing-braces",
+        ],
+    }),
     deps = [
         "@raylib-latest//:raylib-angle",
     ],
@@ -21,11 +24,14 @@ cc_binary(
 cc_binary(
     name = "raylib_angle_shader_300es",
     srcs = ["raylib_angle_shader_300es.c"],
-    copts = [
-        "-std=gnu99",
-        "-fno-strict-aliasing",
-        "-Wno-missing-braces",
-    ],
+    copts = select({
+        "@platforms//os:windows": ["/std:c11"],
+        "//conditions:default": [
+            "-std=gnu99",
+            "-fno-strict-aliasing",
+            "-Wno-missing-braces",
+        ],
+    }),
     deps = [
         "@raylib-latest//:raylib-angle",
     ],
