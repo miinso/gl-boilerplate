@@ -78,3 +78,32 @@ http_archive(
     build_file = "//third_party/wgpu-native:wgpu-macos.BUILD",
     urls = ["https://github.com/gfx-rs/wgpu-native/releases/download/{}/wgpu-macos-x86_64-release.zip".format(WGPU_NATIVE_VERSION)],
 )
+
+##
+#  ANGLE static (godotengine/godot-angle-static, prebuilt per-platform)
+##
+ANGLE_STATIC_VERSION = "chromium/7578"
+
+http_archive(
+    name = "angle_static_win_x64",
+    build_file = "//third_party/angle-static:angle-win.BUILD",
+    urls = ["https://github.com/godotengine/godot-angle-static/releases/download/{}/godot-angle-static-x86_64-msvc-release.zip".format(ANGLE_STATIC_VERSION)],
+)
+
+http_archive(
+    name = "angle_static_linux_x64",
+    build_file = "//third_party/angle-static:angle-linux.BUILD",
+    urls = ["https://github.com/godotengine/godot-angle-static/releases/download/{}/godot-angle-static-x86_64-gcc-release.zip".format(ANGLE_STATIC_VERSION)],
+)
+
+http_archive(
+    name = "angle_static_macos_arm64",
+    build_file = "//third_party/angle-static:angle-macos.BUILD",
+    urls = ["https://github.com/godotengine/godot-angle-static/releases/download/{}/godot-angle-static-arm64-macos-release.zip".format(ANGLE_STATIC_VERSION)],
+)
+
+http_archive(
+    name = "angle_static_macos_x64",
+    build_file = "//third_party/angle-static:angle-macos.BUILD",
+    urls = ["https://github.com/godotengine/godot-angle-static/releases/download/{}/godot-angle-static-x86_64-macos-release.zip".format(ANGLE_STATIC_VERSION)],
+)
