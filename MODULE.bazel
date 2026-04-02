@@ -1,20 +1,50 @@
-bazel_dep(name = "apple_support", version = "1.12.0", repo_name = "build_bazel_apple_support")
-bazel_dep(name = "platforms", version = "0.0.10")
-bazel_dep(name = "rules_cc", version = "0.0.9")
+bazel_dep(name = "apple_support", version = "1.23.1", repo_name = "build_bazel_apple_support")
+bazel_dep(name = "platforms", version = "0.0.11")
+bazel_dep(name = "rules_cc", version = "0.1.1")
 bazel_dep(name = "rules_pkg", version = "1.0.1")
 
 ##
 #  compiler commands
 ##
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
-
 git_override(
     module_name = "hedron_compile_commands",
     remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
-    commit = "1e08f8e0507b6b6b1f4416a9a22cf5c28beaba93",
+    commit = "4f28899228fb3ad0126897876f147ca15026151e",
 )
 
 ##
 #  glm
 ##
 bazel_dep(name = "glm", version = "0.9.9.8")
+
+##
+#  external repos (migrated from WORKSPACE)
+##
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+git_repository = use_repo_rule("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+GLFW_VERSION = "3.3.10"
+
+http_archive(
+    name = "glfw",
+    build_file = "//third_party/glfw:BUILD",
+    strip_prefix = "glfw-{}".format(GLFW_VERSION),
+    urls = ["https://github.com/glfw/glfw/archive/{}.tar.gz".format(GLFW_VERSION)],
+)
+
+GLFW2_VERSION = "3.4"
+
+http_archive(
+    name = "glfw2",
+    build_file = "//third_party/glfw2:BUILD",
+    strip_prefix = "glfw-{}".format(GLFW2_VERSION),
+    urls = ["https://github.com/glfw/glfw/archive/{}.tar.gz".format(GLFW2_VERSION)],
+)
+
+git_repository(
+    name = "raylib-latest",
+    build_file = "//third_party:raylib-latest.BUILD",
+    commit = "cf0d6fc664f1d0775c6b21ed79feaa1e38b2ddb4",
+    remote = "https://github.com/raysan5/raylib.git",
+)
