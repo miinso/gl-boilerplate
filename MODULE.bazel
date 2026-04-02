@@ -48,3 +48,32 @@ git_repository(
     commit = "cf0d6fc664f1d0775c6b21ed79feaa1e38b2ddb4",
     remote = "https://github.com/raysan5/raylib.git",
 )
+
+##
+#  wgpu-native (prebuilt, per-platform)
+##
+WGPU_NATIVE_VERSION = "v27.0.4.0"
+
+http_archive(
+    name = "wgpu_native_win_x64",
+    build_file = "//third_party/wgpu-native:wgpu-win.BUILD",
+    urls = ["https://github.com/gfx-rs/wgpu-native/releases/download/{}/wgpu-windows-x86_64-msvc-release.zip".format(WGPU_NATIVE_VERSION)],
+)
+
+http_archive(
+    name = "wgpu_native_linux_x64",
+    build_file = "//third_party/wgpu-native:wgpu-linux.BUILD",
+    urls = ["https://github.com/gfx-rs/wgpu-native/releases/download/{}/wgpu-linux-x86_64-release.zip".format(WGPU_NATIVE_VERSION)],
+)
+
+http_archive(
+    name = "wgpu_native_macos_arm64",
+    build_file = "//third_party/wgpu-native:wgpu-macos.BUILD",
+    urls = ["https://github.com/gfx-rs/wgpu-native/releases/download/{}/wgpu-macos-aarch64-release.zip".format(WGPU_NATIVE_VERSION)],
+)
+
+http_archive(
+    name = "wgpu_native_macos_x64",
+    build_file = "//third_party/wgpu-native:wgpu-macos.BUILD",
+    urls = ["https://github.com/gfx-rs/wgpu-native/releases/download/{}/wgpu-macos-x86_64-release.zip".format(WGPU_NATIVE_VERSION)],
+)

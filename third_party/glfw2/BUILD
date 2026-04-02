@@ -141,6 +141,11 @@ cc_library(
         "@bazel_tools//src/conditions:windows": ["/DWIN32_LEAN_AND_MEAN"],
         "//conditions:default": [],
     }),
+    linkopts = select({
+        "@bazel_tools//src/conditions:windows": WIN32_LINKOPTS,
+        "@bazel_tools//src/conditions:linux_x86_64": LINUX_LINKOPTS,
+        "//conditions:default": [],
+    }),
 )
 
 objc_library(
