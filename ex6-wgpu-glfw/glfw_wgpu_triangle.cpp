@@ -1,4 +1,5 @@
 #include <webgpu/webgpu.h>
+#include <webgpu/wgpu.h>
 #include <GLFW/glfw3.h>
 #include <glfw3webgpu.h>
 #include <iostream>
@@ -128,8 +129,14 @@ int main() {
         return -1;
     }
 
-    // create wgpu instance
+    // create wgpu instance (skip indirect validation -- fails on some GL drivers)
+    WGPUInstanceExtras extras = {};
+    extras.chain.sType = (WGPUSType)WGPUSType_InstanceExtras;
+    extras.backends = WGPUInstanceBackend_All;
+    extras.flags = WGPUInstanceFlag_Debug;
+
     WGPUInstanceDescriptor instance_desc = {};
+    instance_desc.nextInChain = &extras.chain;
     WGPUInstance instance = wgpuCreateInstance(&instance_desc);
     if (!instance) {
         std::cerr << "Failed to create WebGPU instance" << std::endl;
